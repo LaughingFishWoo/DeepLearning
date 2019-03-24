@@ -1,0 +1,188 @@
+
+# coding: utf-8
+
+# In[338]:
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import argparse
+import logging
+
+
+# In[339]:
+
+
+mean1 = [0,0]
+cov1 = [[1,0],[0,10]]
+data = np.random.multivariate_normal(mean1,cov1,100)
+    
+mean2 = [10,10]
+cov2 = [[10,0],[0,1]]
+data = np.append(data,np.random.multivariate_normal(mean2,cov2,100),0)
+
+
+# In[340]:
+
+
+###Generate a dataset of points in R^2 To do this, define two Gaussian distributions and sample 100 points from each
+
+
+# In[341]:
+
+
+# %load perceptron.py
+import numpy as np
+
+class Perceptron(object):
+
+    def __init__(self, n_inputs, max_epochs=1e2, learning_rate=1e-2):
+        """
+        Initializes perceptron object.
+        Args:
+            n_inputs: number of inputs.
+            max_epochs: maximum number of training cycles.
+            learning_rate: magnitude of weight changes at each training cycle
+        """
+        
+    def forward(self, input):
+        """
+        Predict label from input 
+        Args:
+            input: array of dimension equal to n_inputs.
+        """
+        return label
+        
+    def train(self, training_inputs, labels):
+        """
+        Train the perceptron
+        Args:
+            training_inputs: list of numpy arrays of training points.
+            labels: arrays of expected output value for the corresponding point in training_inputs.
+        """
+
+
+# In[342]:
+
+
+y=np.ones(100)
+y=y.reshape(100,1)
+z=np.ones(100)
+z=z*-1
+z=z.reshape(100,1)
+y=np.append(z,y,0)
+
+
+# In[343]:
+
+
+data=np.append(data,y,1)
+
+
+# In[344]:
+
+
+###train_test_split
+
+
+# In[345]:
+
+
+def train_test_split(X,y,test_ratio,seed=None):
+    
+    if seed:
+        np.random.seed(seed)
+    shuffled_indexes= np.random.permutation(len(X))
+    
+    test_size= int(len(X)*test_ratio)
+    test_indexes= shuffled_indexes[:test_size]
+    train_indexes=shuffled_indexes[test_size:]
+    
+    X_train =X[train_indexes]
+    y_train =y[train_indexes]
+    
+    X_test = X[test_indexes]
+    y_test = y[test_indexes]
+    return X_train,X_test,y_train,y_test
+
+
+# In[346]:
+
+
+X_train,X_test,y_train,y_test=train_test_split(x,y,0.2)
+
+
+# In[347]:
+
+
+class Perceptron():
+    def __init__(self,
+                 max_iter=5000,
+                 eta=0.00001,
+                 verbose=True):
+        self.eta_ = eta
+        self.max_iter_ = max_iter
+        self.w = 0
+        self.verbose = verbose
+
+    def train(self, X, y):
+        self.w = np.zeros(X.shape[1] + 1)
+        correct_count = 0
+        n_iter_ = 0
+
+        while n_iter_ < self.max_iter_:
+            index = random.randint(0, y.shape[0] - 1)
+            xx_ = np.hstack([X[index], 1])
+            yy_ = 2 * y[index] - 1
+            wx = np.dot(self.w, xx_)
+
+            if wx * yy_ > 0:
+                correct_count += 1
+                if correct_count > self.max_iter_:
+                    break
+                continue
+
+            self.w += self.eta_ * yy_ * xx_
+            n_iter_ += 1
+            if self.verbose:
+                print(n_iter_)
+
+    def forword(self, X):
+        # for b
+        X = np.hstack([X, np.ones(X.shape[0]).reshape((-1, 1))])
+        # activation function for perceptron: sign
+        rst = np.array([1 if rst else -1 for rst in np.dot(X, self.w) > 0])
+        # np.sign(0) == 0
+        # rst = np.sign(np.dot(X, self.w))
+        return rst
+
+
+# In[348]:
+
+
+my_Perceptron=Perceptron()
+my_Perceptron.train(X_train,y_train)
+
+
+# In[349]:
+
+
+y_predict=my_Perceptron.forword(X_test)
+y_test=y_test.astype(np.int).T
+y_test=y_test.reshape(40,)
+sum(y_test==y_predict)
+
+
+# In[352]:
+
+
+### accuracy on the test 
+
+
+# In[353]:
+
+
+accuracy=sum(y_test==y_predict)/len(y_test)
+print(accuracy)
+
